@@ -1,9 +1,9 @@
 <!-- xonettn -->
 <div align="center">
 
-# 🔧 Edge Forge
+# 🔧 Edge-Forge MVP
 
-Build and run private AI workflows directly on your device with WebGPU. Edge-Forge targets teams who need local control, speed, and custom skills.
+Edge-Forge is a local-first AI workspace for running and extending model workflows directly in the browser with WebGPU.
 
 
 ![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB) ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white) ![Express](https://img.shields.io/badge/Express-000000?logo=express&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white) ![Netlify](https://img.shields.io/badge/Netlify-00C7B7?logo=netlify&logoColor=white)
@@ -13,61 +13,6 @@ Build and run private AI workflows directly on your device with WebGPU. Edge-For
 </div>
 
 ---
-
-## 📋 Overview
-Build and run private AI workflows directly on your device with WebGPU. Edge-Forge targets teams who need local control, speed, and custom skills.
-
-## 📦 Tech Stack
-- React
-- Vite
-- Express
-- Netlify (deployed)
-
-## 🗂️ Project Structure
-```
-edge-forge/
-  - public
-  - src
-  (23 files total)
-```
-
-## 🚀 Getting Started
-
-### 📋 Prerequisites
-- Node.js (v18+)
-- npm or yarn
-
-### 📦 Installation
-```bash
-git clone https://github.com/1nc0gn30/edge-forge.git
-cd edge-forge
-npm install
-```
-
-### 💻 Development
-```bash
-npm run dev
-```
-
-### 🔨 Build
-```bash
-npm run build
-```
-
-### ⚙️ Available Scripts
-  npm run dev - vite --port=3000 --host=0.0.0.0
-  npm run build - vite build
-  npm run preview - vite preview
-  npm run clean - rm -rf dist
-  npm run lint - tsc --noEmit
-
-## 📂 Original README
-<details>
-<summary>Click to expand original README</summary>
-
-# Edge-Forge MVP
-
-Edge-Forge is a local-first AI workspace for running and extending model workflows directly in the browser with WebGPU.
 
 ## Why it exists
 
@@ -100,32 +45,6 @@ Prerequisite: Node.js 20+
 ## Domain and canonical
 
 - Canonical URL: `https://edge-forge.nealfrazier.tech/`
-
-</details>
-
-## 📝 TODO / Roadmap
-- [ ] Add unit tests
-- [ ] Add LICENSE file
-- [ ] Add Dockerfile for containerized deployment
-- [ ] Consider adding Tailwind CSS
-- [ ] Add CI/CD pipeline
-- [ ] Add contribution guidelines (CONTRIBUTING.md)
-- [ ] Improve error handling and edge cases
-- [ ] Add environment variable documentation
-- [ ] Update dependencies to latest versions
-- [ ] Add code comments and inline documentation
-
-## 🚀 Deployment
-This project is deployed on Netlify. See netlify.toml for configuration.
-
-## 👤 Author
-**Neal Frazier** - [@AshAmplifies](https://github.com/1nc0gn30)
-
-## 🔗 Links
-- GitHub: https://github.com/1nc0gn30/edge-forge
-
----
-*This README was enhanced as part of the neals-projects-2026 batch update.*
 
 ---
 
