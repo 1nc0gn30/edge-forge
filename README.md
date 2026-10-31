@@ -32,4 +32,4 @@ Prerequisite: Node.js 20+
 
 ## Domain and canonical
 
-- Canonical URL: `https://edge-forge.nealfrazier.tech/`
+- Canonical URL: `https://edge-forge.nullai.tech/`
