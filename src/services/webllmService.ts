@@ -1,26 +1,34 @@
-import * as webllm from "@mlc-ai/web-llm";
-import { Skill } from "../types";
+import { MODEL_CATALOG } from '../engine/hardwareInspector';
+import { ModelSpec } from '../types';
+
+type WebLLMModule = typeof import('@mlc-ai/web-llm');
+type MLCEngineInstance = InstanceType<WebLLMModule['MLCEngine']>;
 
 export class WebLLMService {
-  private engine: webllm.MLCEngine | null = null;
+  private engine: MLCEngineInstance | null = null;
+  private loadedModelId: string | null = null;
   private onProgress: (progress: number, message: string) => void = () => {};
 
-  getPrebuiltModels() {
-    return webllm.prebuiltAppConfig.model_list
-      .filter(m => !m.model_id.toLowerCase().includes('embed'))
-      .map(m => ({
-        id: m.model_id,
-        name: m.model_id.split('-').slice(0, 3).join(' '),
-        vram: m.vram_required_MB ? `~${Math.round(m.vram_required_MB / 1024 * 10) / 10}GB VRAM` : 'Unknown'
-      }));
+  getWebGpuModels(): ModelSpec[] {
+    return MODEL_CATALOG.filter((m) => m.webllmCapable);
+  }
+
+  isLoaded(): boolean {
+    return this.engine !== null && this.loadedModelId !== null;
+  }
+
+  getLoadedModelId(): string | null {
+    return this.loadedModelId;
   }
 
   async checkWebGPUSupport(): Promise<boolean> {
-    if (!(navigator as any).gpu) return false;
+    if (typeof navigator === 'undefined') return false;
+    const gpu = (navigator as Navigator & { gpu?: { requestAdapter: () => Promise<unknown> } }).gpu;
+    if (!gpu || typeof gpu.requestAdapter !== 'function') return false;
     try {
-      const adapter = await (navigator as any).gpu.requestAdapter();
-      return !!adapter;
-    } catch (e) {
+      const adapter = await gpu.requestAdapter();
+      return Boolean(adapter);
+    } catch {
       return false;
     }
   }
@@ -29,71 +37,49 @@ export class WebLLMService {
     this.onProgress = callback;
   }
 
-  async loadModel(modelId: string = "Gemma-2-2b-it-q4f16_1-MLC") {
-    try {
-      const gpuSupported = await this.checkWebGPUSupport();
-      if (!gpuSupported) {
-        throw new Error("WebGPU is not supported or enabled in your browser. Please use Chrome/Edge/Arc and ensure WebGPU is enabled in flags if necessary.");
-      }
-
-      this.engine = new webllm.MLCEngine();
-      this.engine.setInitProgressCallback((report: webllm.InitProgressReport) => {
-        this.onProgress(report.progress, report.text);
-      });
-
-      await this.engine.reload(modelId);
-    } catch (error: any) {
-      console.error("WebLLM Load Error:", error);
-      throw new Error(error.message || "Failed to load model. This could be due to insufficient VRAM, network issues, or browser compatibility.");
+  async loadModel(modelId: string = 'SmolLM2-360M-Instruct-q4f16_1-MLC'): Promise<void> {
+    const gpuSupported = await this.checkWebGPUSupport();
+    if (!gpuSupported) {
+      throw new Error(
+        'WebGPU adapter unavailable in this browser. Edge-Forge remains fully functional using the Local Deterministic Engine.'
+      );
     }
-  }
 
-  async generate(
-    messages: any[],
-    skills: Skill[],
-    onUpdate: (text: string) => void
-  ) {
-    if (!this.engine) throw new Error("Engine not initialized");
-
-    // Convert skills to web-llm tools format if supported, 
-    // or inject into system prompt for now as a fallback if the specific model variant doesn't support native tool calling well in web-llm yet.
-    // For Gemma 4 / Gemma 2, we can try native tool calling.
-
-    const tools: webllm.ChatCompletionTool[] = skills.map(skill => ({
-      type: "function",
-      function: {
-        name: skill.name,
-        description: skill.description,
-        parameters: skill.parameters,
-      },
-    }));
-
-    const completion = await this.engine.chat.completions.create({
-      messages,
-      tools: tools.length > 0 ? tools : undefined,
-      stream: true,
+    this.onProgress(0.05, 'Loading WebLLM runtime chunk...');
+    const webllm = await import('@mlc-ai/web-llm');
+    const engine = new webllm.MLCEngine();
+    engine.setInitProgressCallback((report) => {
+      this.onProgress(report.progress, report.text);
     });
 
-    let fullText = "";
-    for await (const chunk of completion) {
-      const delta = chunk.choices[0]?.delta?.content || "";
-      fullText += delta;
-      onUpdate(fullText);
-      
-      // Handle tool calls
-      const toolCalls = chunk.choices[0]?.delta?.tool_calls;
-      if (toolCalls) {
-        return { toolCalls };
-      }
-    }
-
-    return { text: fullText };
+    await engine.reload(modelId);
+    this.engine = engine;
+    this.loadedModelId = modelId;
+    this.onProgress(1, `Loaded ${modelId} into WebGPU VRAM`);
   }
 
-  async interrupt() {
-    if (this.engine) {
-      await this.engine.interruptGenerate();
+  async generateSinglePass(prompt: string, systemPrompt: string): Promise<string | null> {
+    if (!this.engine) return null;
+
+    const completion = await this.engine.chat.completions.create({
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: prompt },
+      ],
+      temperature: 0.2,
+      max_tokens: 512,
+      stream: false,
+    });
+
+    return completion.choices[0]?.message?.content ?? '';
+  }
+
+  async unload(): Promise<void> {
+    if (this.engine && typeof this.engine.unload === 'function') {
+      await this.engine.unload();
     }
+    this.engine = null;
+    this.loadedModelId = null;
   }
 }
 

@@ -3,33 +3,117 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Edge-Forge | Local-First AI Skill Workspace</title>
-    <meta name="description" content="Build and run private AI workflows directly on your device with WebGPU. Edge-Forge targets teams who need local control, speed, and custom skills." />
+    <title>Edge-Forge | Private On-Device AI Workflow &amp; WebGPU Workbench</title>
+    <meta
+      name="description"
+      content="Build and run private AI workflows directly on your device with WebGPU and a deterministic local fallback engine. Node pipeline builder, custom skill studio, and VRAM fit inspector."
+    />
     <meta name="author" content="Neal Frazier" />
     <meta name="robots" content="index, follow" />
-    <meta name="theme-color" content="#0b0f19" />
+    <meta name="theme-color" content="#090b10" />
     <link rel="canonical" href="https://edge-forge.nealfrazier.tech/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- OpenGraph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Edge-Forge" />
-    <meta property="og:title" content="Edge-Forge | Local-First AI Skill Workspace" />
-    <meta property="og:description" content="Build and run private AI workflows directly on your device with WebGPU." />
+    <meta property="og:title" content="Edge-Forge | Private On-Device AI Workflow &amp; WebGPU Workbench" />
+    <meta
+      property="og:description"
+      content="Build and run private AI workflows directly on your device with WebGPU, local deterministic transforms, custom prompt skills, and quantized model VRAM inspection."
+    />
     <meta property="og:url" content="https://edge-forge.nealfrazier.tech/" />
-    <meta property="og:image" content="https://edge-forge.nealfrazier.tech/og-image.svg" />
-    <meta property="og:image:alt" content="Edge-Forge preview image" />
+    <meta property="og:image" content="https://edge-forge.nealfrazier.tech/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Edge-Forge on-device AI workflow pipeline builder and WebGPU hardware inspector" />
+
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Edge-Forge | Local-First AI Skill Workspace" />
-    <meta name="twitter:description" content="Build and run private AI workflows directly on your device with WebGPU." />
-    <meta name="twitter:image" content="https://edge-forge.nealfrazier.tech/og-image.svg" />
+    <meta name="twitter:site" content="@1nc0gn30" />
+    <meta name="twitter:creator" content="@1nc0gn30" />
+    <meta name="twitter:title" content="Edge-Forge | Private On-Device AI Workflow &amp; WebGPU Workbench" />
+    <meta
+      name="twitter:description"
+      content="Private in-browser AI workflow builder with WebGPU hardware inspection, quantized model VRAM checks, and deterministic local execution."
+    />
+    <meta name="twitter:image" content="https://edge-forge.nealfrazier.tech/og-image.png" />
+
+    <!-- Structured Data (AEO & SEO @graph) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebApplication",
+            "name": "Edge-Forge",
+            "url": "https://edge-forge.nealfrazier.tech/",
+            "description": "Local-first in-browser AI workflow builder with WebGPU capability inspection, quantized model VRAM fit checks, custom prompt/transform skills, and a deterministic local execution engine.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Web, Linux, macOS, Windows",
+            "isAccessibleForFree": true,
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "creator": {
+              "@type": "Person",
+              "name": "Neal Frazier",
+              "affiliation": {
+                "@type": "Organization",
+                "name": "Neal Frazier Tech",
+                "url": "https://nullai.tech"
+              },
+              "sameAs": [
+                "https://github.com/1nc0gn30",
+                "https://nullai.tech"
+              ]
+            },
+            "codeRepository": "https://github.com/1nc0gn30/edge-forge"
+          },
+          {
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Does Edge-Forge send prompts, logs, or workflow data to remote servers?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. All pipeline transforms, PII redaction, regex filtering, JSON extraction, chunking, summarization, custom skills, and optional WebGPU inference execute locally inside your browser tab."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What happens if my device or browser does not support WebGPU?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Edge-Forge detects WebGPU adapter limits automatically and runs every workflow node using its deterministic local CPU engine without errors. You can also simulate target VRAM budgets for MLC and GGUF models."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is Edge-Forge free to use and open-source?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. Edge-Forge is 100% free and open-access with zero paywalls, accounts, or API keys required. Optional community support is available via Buy Us a Coffee (Stripe) or Solana tip."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
-    <form name="waitlist" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
-      <input type="hidden" name="form-name" value="waitlist" />
-      <input type="email" name="email" />
-      <input type="text" name="bot-field" />
-    </form>
-
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
